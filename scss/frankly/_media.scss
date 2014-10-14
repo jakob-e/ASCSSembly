@@ -1,4 +1,17 @@
 
+// Breakpoints
+$breakpoints:(
+      all     :'all'
+    , mobile  :'(max-width: 480px)'
+    , palm    :'(max-width: 680px)'
+    , tablet  :'(max-width: 960px)'
+    , desktop :'(max-width: 1200px)'
+    , large   :'(min-width: 1201px)' 
+) !default; 
+
+
+// Simple media mixin without the overthinking
+// of so many breakpoint libraries
 $__current_breakpoint_key: '';
 @mixin media($breakpointkeys...){
     @each $key , $value in $breakpointkeys {
@@ -8,6 +21,8 @@ $__current_breakpoint_key: '';
     }
 }
 
+
+// Mixin to clone placeholders to each media directive
 @mixin extends(){
     @content;
     @each $key, $value in $breakpoints {
@@ -15,12 +30,104 @@ $__current_breakpoint_key: '';
     } 
 }
 
+// Mixin to create media placeholders 
 @mixin new-extend($extend-name){
     %#{ $__current_breakpoint_key + $extend-name }{ @content; }
 }
 
+// Mixin to extend existing media placeholders
 @mixin extend($extend-name){
     & {
         @extend %#{ $__current_breakpoint_key + $extend-name; }
     }
 }
+
+
+/* 
+    
+    
+    @include extends(){
+        @include new-extend( foo ){ ... }
+        @include new-extend( bar ){ ... } 
+        ...
+    }
+
+    
+    First step in extend is to print out the @content - resulting in 
+    @include new-extend( foo ){ ... }
+    @include new-extend( bar ){ ... }
+    
+    At this point $__current_breakpoint_key is empty and will cause
+    our content includes to render like this:
+    %foo { ... }
+    %bar { ... }
+
+    Second step is to loop through all breakpoints and pass the 
+    content on to the media mixin with the current breakpoint.
+    
+    This is how it will look when reaching the tablet label
+    @include media( tablet ){                    tablet-breakpoint is passed to media
+        @for $key, $value in tablet {            tablet-breakpoint    
+            $__current_breakpoint_key: "tablet"  the global currentkey is now "tablet"
+                                                 
+               @media (max-width: 960px) {            a media directive with the tablet query is added  
+                   @include new-extend( foo ){ ... }  with the passed content from extends
+                   @include new-extend( bar ){ ... }
+               }
+            $__current_breakpoint_key: ''        after creating the media query we reset the global key    
+        }
+    }
+    
+    When our passed content includes renders at this point the global 
+    key is tablet - resulting in this prefixed output:
+    
+    @media (max-width: 960px){
+        %tabletfoo { ... }
+        %tabletbar { ... }
+    }
+    
+    and so on untill all the placeholders are created now with unique names
+    to avoid conflicts.
+    
+    
+    What happens when we want to use the placeholders 
+    
+    .foo { @extends %foo }          // works just like normal
+    
+    // If we use the extend mixin this is what happens
+    .foo { @include extend( foo ); }    
+    
+    @mixin extend( foo ){
+        & {     // the & will reference the parent selector (.foo)
+            // at this point our global key is empty 
+            @extend 
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+*/
+
