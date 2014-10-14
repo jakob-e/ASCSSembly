@@ -36,3 +36,6 @@ _italic_
     - ul
 - ul    
 
+1. ol
+2. ol
+    3. ol
