@@ -26,3 +26,9 @@ http://stackoverflow.com/questions/14494747/add-images-to-readme-md-in-github
 ####H4
 #####H5
 ######H6
+
+
+`code`
+
+**Bold**
+
