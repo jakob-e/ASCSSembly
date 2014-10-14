@@ -11,7 +11,7 @@ Just an idea - nothing special yet ;)
 
 
 
-###GitHub Tricks:
+####GitHub Tricks:
 - Images
 http://solutionoptimist.com/2013/12/28/awesome-github-tricks/
 - Folders
