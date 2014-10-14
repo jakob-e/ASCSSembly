@@ -39,7 +39,7 @@
 	// Config defaults:
 	// Default paths 
 	$paths:(
-		  url         : ''
+	      url         : ''
 	    , img         : '../img/'
 	    , gfx         : '../gfx/'
 	    , fonts       : '../fonts/'
@@ -76,7 +76,7 @@
 
 	// ______________________________________________________________
 	//
-	// 
+	// Path  
 	//
 	@function url($src, $path-key: $paths-default, $cache: false ){
 		@if($paths-enabled and map-has-key($paths,$path-key)){
