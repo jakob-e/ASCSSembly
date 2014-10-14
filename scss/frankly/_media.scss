@@ -1,0 +1,26 @@
+
+$__current_breakpoint_key: '';
+@mixin media($breakpointkeys...){
+    @each $key , $value in $breakpointkeys {
+        $__current_breakpoint_key: $key !global;
+        @media #{map-get($breakpoints, $key)}{ @content; }    
+        $___current_breakpoint_key: '' !global;
+    }
+}
+
+@mixin extends(){
+    @content;
+    @each $key, $value in $breakpoints {
+        @include media($key){ @content; } 
+    } 
+}
+
+@mixin new-extend($extend-name){
+    %#{ $__current_breakpoint_key + $extend-name }{ @content; }
+}
+
+@mixin extend($extend-name){
+    & {
+        @extend %#{ $__current_breakpoint_key + $extend-name; }
+    }
+}
