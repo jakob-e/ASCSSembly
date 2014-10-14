@@ -22,7 +22,7 @@ $__current_breakpoint_key: '';
 }
 
 // Function to get the current media context 
-@mixin media-context(){
+@function media-context(){
     @return $__current_breakpoint_key; 
 }
 
