@@ -17,7 +17,7 @@ $__current_breakpoint_key: '';
     @each $key , $value in $breakpointkeys {
         $__current_breakpoint_key: $key !global;
         @media #{map-get($breakpoints, $key)}{ @content; }    
-        $___current_breakpoint_key: '' !global;
+        $__current_breakpoint_key: '' !global;
     }
 }
 
@@ -36,13 +36,13 @@ $__current_breakpoint_key: '';
 
 // Mixin to create media placeholders 
 @mixin new-extend($extend-name){
-    %#{ $__current_breakpoint_key + $extend-name }{ @content; }
+    %#{ media-context() + $extend-name }{ @content; }
 }
 
 // Mixin to extend existing media placeholders
 @mixin extend($extend-name){
     & {
-        @extend %#{ $__current_breakpoint_key + $extend-name; }
+        @extend %#{ media-context() + $extend-name; }
     }
 }
 
