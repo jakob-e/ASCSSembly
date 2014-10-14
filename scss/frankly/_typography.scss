@@ -5,10 +5,12 @@
 		@at-root {
 			@font-face {
 				font-family: $font-name;
-				// Attempt to load local ?  local('Open Sans Light'), local('OpenSans-Light'),
-				@include scope(ie8, ie9, oldIE){
-				    src: url($font-file+'.eot', fonts); 								  // 1   ie9 compat mode          <- transclude ?
-				    src: url($font-file+'.eot?#iefix' fonts) format('embedded-opentype'); // 2   ie6 - ie8                <- transclude
+				// ****
+				// TODO -   Attempt to load local ?  local('Open Sans Light'), local('OpenSans-Light'),
+				// ****
+				@include scope(ie8, ie9){
+				    src: url($font-file+'.eot', fonts); 								  // 1   ie9 compat mode   
+				    src: url($font-file+'.eot?#iefix' fonts) format('embedded-opentype'); // 2   ie6 - ie8         
 				}
 				@include scope(){
 					src: url($font-file+'.woff2', fonts) format('woff2'),			      // 3   Edge browsers Chrome 37
