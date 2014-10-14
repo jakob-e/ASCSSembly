@@ -29,6 +29,10 @@ http://stackoverflow.com/questions/14494747/add-images-to-readme-md-in-github
 
 
 `code`
-
+_italic_
 **Bold**
+
+- ul
+-     - ul
+- ul    
 
