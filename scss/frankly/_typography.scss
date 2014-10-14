@@ -2,6 +2,8 @@
 
 
 	@mixin font-face($font-name, $font-file, $font-weight:normal, $font-style:normal, $font-fallbacks...){
+	    
+	    // Make sure font-faces are compiled at root level
 		@at-root {
 			@font-face {
 				font-family: $font-name;
@@ -21,18 +23,19 @@
 			    font-weight: $font-weight;
 			    font-style:  $font-style;
 			}
+			
 			// Make sure we keep quotes 
 		 	$font-names:null; 
 		 	$l:length($font-fallbacks);
-		  	@if($l>0){ 
-		  		@for $i from 1 through $l{
+		  	@if $l > 0 { 
+		  		@for $i from 1 through $l {
 		    		$font-names:$font-names#{','} nth($font-fallbacks,$i);
 		    	}
 		  	}
 		  	%#{$font-name}{	
 		  		font-family: $font-name $font-names;
 				font-weight: $font-weight;
-				font-style: $font-style;	
+				font-style:  $font-style;	
 			}
 		}
 		
