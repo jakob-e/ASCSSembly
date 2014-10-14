@@ -80,7 +80,8 @@
 	//
 	@function url($src, $path-key: $paths-default, $cache: false ){
 		@if($paths-enabled and map-has-key($paths,$path-key)){
-			$path: map-get($paths, $path-key);	    	
+			$path: map-get($paths, $path-key);
+			// Be nice – remove path if base64 is detected
 			$url : if(str-index($src,'data:image'), $src, $path + $src);
 			// Cache
 			@if $paths-cache-enabled == true {
