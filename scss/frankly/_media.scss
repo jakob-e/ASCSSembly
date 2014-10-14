@@ -21,6 +21,10 @@ $__current_breakpoint_key: '';
     }
 }
 
+// Function to get the current media context 
+@mixin media-context(){
+    @return $__current_breakpoint_key; 
+}
 
 // Mixin to clone placeholders to each media directive
 @mixin extends(){
@@ -43,91 +47,38 @@ $__current_breakpoint_key: '';
 }
 
 
-/* 
-    
-    
-    @include extends(){
-        @include new-extend( foo ){ ... }
-        @include new-extend( bar ){ ... } 
-        ...
-    }
 
-    
-    First step in extend is to print out the @content - resulting in 
-    @include new-extend( foo ){ ... }
-    @include new-extend( bar ){ ... }
-    
-    At this point $__current_breakpoint_key is empty and will cause
-    our content includes to render like this:
-    %foo { ... }
-    %bar { ... }
-
-    Second step is to loop through all breakpoints and pass the 
-    content on to the media mixin with the current breakpoint.
-    
-    This is how it will look when reaching the tablet label
-    @include media( tablet ){                    tablet-breakpoint is passed to media
-        @for $key, $value in tablet {            tablet-breakpoint    
-            $__current_breakpoint_key: "tablet"  the global currentkey is now "tablet"
-                                                 
-               @media (max-width: 960px) {            a media directive with the tablet query is added  
-                   @include new-extend( foo ){ ... }  with the passed content from extends
-                   @include new-extend( bar ){ ... }
-               }
-            $__current_breakpoint_key: ''        after creating the media query we reset the global key    
-        }
-    }
-    
-    When our passed content includes renders at this point the global 
-    key is tablet - resulting in this prefixed output:
-    
-    @media (max-width: 960px){
-        %tabletfoo { ... }
-        %tabletbar { ... }
-    }
-    
-    and so on untill all the placeholders are created now with unique names
-    to avoid conflicts.
-    
-    
-    What happens when we want to use the placeholders 
-    
-    .foo { @extends %foo }          // works just like normal
-    
-    // If we use the extend mixin this is what happens
-    .foo { @include extend( foo ); }    
-    
-    @mixin extend( foo ){
-        & {     // the & will reference the parent selector (.foo)
-            // at this point our global key is empty 
-            @extend 
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+/**
+ 
+ // 
+ @imclude media(mobile){
+    .foo { ... }
+    .bar { ... }
+ } 
+ 
+ @media (max-width: 480px){
+     .foo { ... }
+     .bar { ... }
+ }
+ 
+ 
+ // Adding multiple keys produces multiple media queries
+ @include media(mobile, tablet){
+     .foo { ... }
+     .bar { ... }
+ }
+ 
+ @media (max-width: 480px){
+     .foo { ... }
+     .bar { ... }
+ }
+ 
+ @media (max-width: 960px){
+     .foo { ... }
+     .bar { ... }
+ }
+ 
+ */
 
 
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-*/
 
