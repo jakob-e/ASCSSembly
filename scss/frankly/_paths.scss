@@ -1,0 +1,97 @@
+
+
+	// ______________________________________________________________
+	// 
+	// Paths
+	// 
+	// Adding centralized path control by overriding the CSS url()
+	// Syntax: property: url(src, [path-key], [cache])
+	// 
+	// src       - resource like font-webfont.woff2, image.png etc.  
+	// path-key  - key in $paths:() referencing a path 
+	// cache     - uncache resource either pass a value - like random(9999)
+	//             $version or true (will invoke random(9999))
+	// 
+	//
+	// IMPORTANT!  $src must be quoted for paths to work 
+	//             url(image.png)    – will not work
+	//             url('image.png')  - will work
+	// 
+	// 			   if the $path-key is invalid no path will be added
+	// ______________________________________________________________
+	// 
+	// Examples:
+	//  
+	// No optional params 
+	// – will use the $paths-default 
+	// 
+	//     	.img { background:url('image.png'); }    
+	//     	.img { background:url(../img/image.png); } // CSS
+	// 
+	// Adding a path-key 
+	// – will use the matching path (key-value is empty why nothing is added)
+	// 
+	// 		.url { background:url('http://www.dk.dk/image.png', url); }    
+	// 		.url { background:url(http://www.dk.dk/image.png); } // CSS
+	//
+	// ______________________________________________________________
+	// 
+	// Config defaults:
+	// Default paths 
+	$paths:(
+		  url         : ''
+	    , img         : '../img/'
+	    , gfx         : '../gfx/'
+	    , fonts       : '../fonts/'
+
+	    , base64gif   : 'data:image/gif;base64,'    
+	    , base64jpg   : 'data:image/jpeg;base64,'   
+	    , base64png   : 'data:image/png;base64,'    
+	    , base64svg   : 'data:image/svg+xml;base64,'
+	    
+		, googlefonts : 'http://fonts.googleapis.com/css?family='
+
+	) !default;
+	
+	// Default path cache - $paths-cache-enabled must be set to true
+	// for $paths-chace to take effect.
+	$paths-cache:(
+		  url         : false
+		, img         : random(9999) // change to true to set different numbers on all images
+		, gfx         : false
+		, fonts       : false
+
+		, base64gif   : false
+		, base64jpg   : false
+		, base64png   : false
+		, base64svg   : false
+
+		, googlefonts : false
+	) !default;
+
+
+	$paths-default      : img   !default; // Default path used if no path is provided
+	$paths-enabled      : true  !default; // Set to false to use the regular url
+	$paths-cache-enabled: false !default; // Set to true to enable cache
+
+	// ______________________________________________________________
+	//
+	// 
+	//
+	@function url($src, $path-key: $paths-default, $cache: false ){
+		@if($paths-enabled and map-has-key($paths,$path-key)){
+			$path: map-get($paths, $path-key);	    	
+			$url : if(str-index($src,'data:image'), $src, $path + $src);
+			// Cache
+			@if $paths-cache-enabled == true {
+				$cache: if($cache, 'cache=' + if($cache == true, random(9999), if($cache == false, '', $cache)),  
+					    if(not map-has-key($paths-cache, $path-key) or map-get($paths-cache, $path-key) == false, '', 'cache=' + 
+					    if(map-get($paths-cache, $path-key) == true,  random(9999), map-get($paths-cache, $path-key) 
+				    	) ) );
+				$url:$url + if($cache != '', if(str-index($url, '?') , '&', '?'), '') + $cache; 
+			}
+	        @return unquote('url(' + $url +')'); 
+	    }
+	     // Disabled, invalid or nulll
+	    @return unquote('url('+$src+')'); 
+	} 

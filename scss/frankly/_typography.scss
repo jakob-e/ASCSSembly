@@ -1,0 +1,38 @@
+
+
+
+	@mixin font-face($font-name, $font-file, $font-weight:normal, $font-style:normal, $font-fallbacks...){
+		@at-root {
+			@font-face {
+				font-family: $font-name;
+				// Attempt to load local ?  local('Open Sans Light'), local('OpenSans-Light'),
+				@include scope(ie8, ie9, oldIE){
+				    src: url($font-file+'.eot', fonts); 								  // 1   ie9 compat mode          <- transclude ?
+				    src: url($font-file+'.eot?#iefix' fonts) format('embedded-opentype'); // 2   ie6 - ie8                <- transclude
+				}
+				@include scope(){
+					src: url($font-file+'.woff2', fonts) format('woff2'),			      // 3   Edge browsers Chrome 37
+				         url($font-file+'.woff', fonts) format('woff'),					  // 4   Modern browsers chrome, opera, ff, ie9, safari 5.1 
+				         url($font-file+'.ttf', fonts) format('truetype'),				  // 5   Older browsers (iOS Safari 4.4 + android)  
+				         url($font-file+'.svg#'+$font-name, fonts) format('svg');		  // 6   Legacy iOS Safari 3.2)   <- drop
+				}
+			    font-weight: $font-weight;
+			    font-style:  $font-style;
+			}
+			// Make sure we keep quotes 
+		 	$font-names:null; 
+		 	$l:length($font-fallbacks);
+		  	@if($l>0){ 
+		  		@for $i from 1 through $l{
+		    		$font-names:$font-names#{','} nth($font-fallbacks,$i);
+		    	}
+		  	}
+		  	%#{$font-name}{	
+		  		font-family: $font-name $font-names;
+				font-weight: $font-weight;
+				font-style: $font-style;	
+			}
+		}
+		
+	}
+

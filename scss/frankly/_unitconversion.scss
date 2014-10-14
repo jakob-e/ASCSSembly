@@ -1,0 +1,149 @@
+
+
+	
+
+	// ===============================
+	// Conversion table
+	// ===============================
+	$convert-units:(
+	  	px: 0px, pt: 0pt, pc: 0pc, in: 0in, mm: 0mm, cm: 0cm, 	// absolute length
+	  	em: 0em, rem: 0rem, ch: 0ch, ex: 0ex,               	// relative length - font based
+	  	vw: 0vw, vh: 0vh, vmin: 0vmin, vmax: 0vmax,         	// relative length - viewport based
+	  	deg: 0deg, turn: 0turn, grad: 0grad, rad: 0rad,     	// angle
+	  	s: 0s, ms: 0ms,                                   		// time
+	  	hz: 0hz, kHz: 0khz,                               		// frequencie
+	  	dpi: 0dpi, dpcm: 0dpcm, dppx: 0dppx,               		// resolution
+	  	'%': 0%, '': 0                                    		// percent and number
+	);    
+
+
+	// ===============================
+    // Convert to unit  
+    // ===============================      
+    @function convert-to-unit($input){
+		$type : type-of($input);
+
+		// We are happy – input is valid 
+		@if $type == 'number' and map-has-key($convert-units, unit($input)) {  
+			@return $input; 
+		}
+		// Wrong unit type
+		@if $type == 'number'{  
+			@warn 'Invalid unit {unit($input)}"'; 
+			@return null; 
+		}
+
+		// Attempt to covert string to unit
+		@if $type == 'string' {
+			$input  : to-lower-case($input); 
+			$numbers: '0','1','2','3','4','5','6','7','8','9';
+			$number : 0;       // return value
+			$devider: 0;       // devider for counting decimals  
+			$decimal: false;   // flag to mark decimal place  
+			$unit   : '';      // unit
+
+			// Loop through string 
+			@for $i from 1 through str-length($input) {
+				$char   : str-slice($input, $i, $i);       // current charcater
+				$index  : index($numbers, $char);          // is character a number
+				$decimal: if($char=='.', true,  $decimal); // flag first decimal
+
+				// Character is a number  
+				@if $index {                                          
+					// Increment devider if we have a decimal flag
+					$devider: if($decimal ,$devider + 1, $devider);      
+
+					// Add number part ($index - 1)
+					// Example - looping through 1973 
+					// 0   * 10 + 1 = 1
+					// 1   * 10 + 9 = 19
+					// 19  * 10 + 7 = 197
+					// 197 * 10 + 3 = 1973              
+					$number: $number * 10 + $index - 1; 
+				}
+
+				// Add unit part 
+				// To keep it simple we remove spaces and multiple dots and dashes 
+				// '- 1 . 2 3 4 5 R.E.M -'  =>  -1.2345rem 
+				@else if not index(' ' '-' '.',$char) { 
+					$unit:$unit + $char;  
+				}                                                     
+			}  
+
+			// Handle negative sign and decimals  
+			$number:if(str-index($input,'-'),$number * -1, $number);
+			$number:$number / pow(10, $devider);          
+
+			// Validate unit 
+			$valid: map-get($convert-units, $unit); 
+			@if not $valid { 
+				@warn 'Unable to convert "#{$unit}" to unit';
+				@return null;
+			}
+
+			// Build-in unit conversion 
+			// 123 + 0em = 123em
+			@return  $number + map-get($convert-units, $unit);
+		}
+
+		// Wrong input type or unit
+		@warn 'Unable to convert "#{$type}" unit';
+		@return null;
+    }
+
+
+
+
+    // ===============================
+    // Convert to number  
+    // ===============================      
+    @function convert-to-number($input){    
+		$input : convert-to-unit($input); // convert to unit
+		@if not $input {  @return null; } // invalid
+		
+		// Remove unit
+		// Example - 44.3em
+		// 44.3em / (0em + 1) = 44.3em / 1em = 44.3; 
+		@return $input / ($input * 0 + 1);
+    }
+
+ 	// ===============================
+    // Convert to length  
+    // ===============================      
+    @function convert-to-length($input, $to-unit){    
+		$input : convert-to-unit($input); // convert to unit
+		@if not $input {  @return null; } // invalid
+		
+
+		$from-unit : unit($input);        // $input unit
+
+		$abs-length:'px','pt,','pc','in','mm','cm';
+		$rel-length:'em','rem,','ex','ch';  
+
+
+		@if not index(join($abs-length, $rel-length, '','%'){
+
+		}
+
+		// From and to units are the same and we don't need to convert
+		// Note! if for some odd reason you try to convert 123deg to deg
+		// you just get 123deg without a warning.
+		@if $from-unit == $to-unit { 
+		@return $input; }
+
+
+
+
+		// Remove unit
+		// Example - 44.3em
+		// 44.3em / (0em + 1) = 44.3em / 1em = 44.3; 
+		@return $input / ($input * 0 + 1);
+    }
+
+
+
+
+
+
+
+    

@@ -1,0 +1,19 @@
+	
+
+	// ______________________________________________________________
+	//
+	// Scope 
+	// 
+	// 
+	$scope:_masterscope !default; 
+	$scope-enabled:true !default;
+
+	@mixin scope($args...){ @if _scope-match($args...){ @content; } }
+	@function scope($value, $args...){ @return if(_scope-match($args...), $value, null); }
+	@function _scope-match($args...){
+	    $match:false;
+	    $labels:if(length($args) == 0, _masterscope, $args);
+	    @if($scope-enabled == false){ @return if(length($args) == 0, true, false); }
+	    @for $i from 1 through length($labels) { $match:if($scope == nth($labels, $i),true, $match); }
+	    @return $match; 
+	}
