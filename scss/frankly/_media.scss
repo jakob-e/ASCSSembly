@@ -69,7 +69,40 @@
 
 
     /*
-    / Test A - root
+    //
+    // Import
+    //
+    @import '_media.scss';
+
+
+    //
+    // Define your breakpoints
+    // 
+    $breakpoints:(
+          all     :'all'
+        , mobile  :'(max-width: 480px)'
+        , palm    :'(min-width: 481px) and (max-width: 680px)'
+        , tablet  :'(min-width: 681px) and (max-width: 960px)'
+        , desktop :'(min-width: 961px) and (max-width: 1200px)'
+        , large   :'(min-width: 1201px)' 
+    ); 
+
+    //
+    // Create the media extends (including the normal %)
+    // Try to add all new-extends in one place to 
+    // minimize the number of CSS media queries 
+    // 
+    @include extends(){
+        @include new-extend(foo){ content:' foo '; context: media-context(); }
+        @include new-extend(bar){ content:' bar '; context: media-context(); }  
+        @include new-extend(doh){ content:' doh extending foo'; @include extend(foo); }  
+    }
+
+
+
+    // 
+    // Test A - root
+    // 
     .testA {
         // All new-extends can be extend like normal
         // ... or by using @include extend(name)  
@@ -77,7 +110,9 @@
         @include extend(bar); 
     }
     
+    //
     // Test B - nested 
+    //
     .testB {
         @include media(mobile){   
             @include extend(foo);  // Extending inside a media directive
@@ -90,7 +125,9 @@
         }
     }
     
+    //
     // Test C - wrapped
+    //
     @include media(mobile, tablet){
         .testC1 { @include extend(foo);  }  
         .testC2 { @include extend(bar);  }  
