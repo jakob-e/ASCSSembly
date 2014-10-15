@@ -1,9 +1,13 @@
 
-  // ================================================
-  // SCSS @extends Across Media Queries  
-  // More info: http://codepen.io/jakob-e/pen/jKyuq  
-  // ================================================  
-  // Define your breakpoints
+    // __________________________________________________________
+    //
+    // SCSS @extends Across Media Queries  
+    // More info: http://codepen.io/jakob-e/pen/jKyuq  
+    // __________________________________________________________ 
+    
+    //
+    // Define your breakpoints
+    //
     $breakpoints:(
           all     :'all'
         , mobile  :'(max-width: 480px)'
@@ -12,8 +16,10 @@
         , desktop :'(min-width: 961px) and (max-width: 1200px)'
         , large   :'(min-width: 1201px)' 
     ) !default; 
-      
+    
+    //  
     // Variable to keep the current media context
+    //
     $__current_breakpoint_key: '';
 
     // Simple media mixin 
@@ -25,13 +31,17 @@
         }
     }
   
+    //
     // Function to get the current media context 
+    //
     @function media-context(){
         @return $__current_breakpoint_key; 
     }
   
+    //
     // Mixin to clone placeholders to each media directive
     // - cuts down on the amount of generated media queries :)
+    // 
     @mixin extends(){
         @content;
         @each $key, $value in $breakpoints {
@@ -39,12 +49,16 @@
         } 
     }
   
+    //
     // Mixin to create media placeholders 
+    //
     @mixin new-extend($extend-name){
         %#{ media-context() + $extend-name }{ @content; }
     }
   
+    //
     // Mixin to extend existing media placeholders
+    // 
     @mixin extend($extend-name){
         & {
             @extend %#{ media-context() + $extend-name }
